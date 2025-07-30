@@ -776,45 +776,4 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('editTransactionForm').addEventListener('submit', (e) => app.handleEditFormSubmit(e));
 });
 
-function addSampleData() {
-    const sampleTransactions = [
-        {
-            id: Date.now() - 4,
-            amount: 25000,
-            category: 'makanan',
-            description: 'Makan siang di warteg',
-            date: new Date().toISOString().split('T')[0],
-            timestamp: new Date().toISOString()
-        },
-        {
-            id: Date.now() - 3,
-            amount: 15000,
-            category: 'transport',
-            description: 'Ojek online',
-            date: new Date().toISOString().split('T')[0],
-            timestamp: new Date().toISOString()
-        },
-        {
-            id: Date.now() - 2,
-            amount: 50000,
-            category: 'belanja',
-            description: 'Belanja kebutuhan rumah',
-            date: new Date(Date.now() - 86400000).toISOString().split('T')[0],
-            timestamp: new Date().toISOString()
-        },
-        {
-            id: Date.now() - 1,
-            amount: 75000,
-            category: 'hiburan',
-            description: 'Nonton film',
-            date: new Date(Date.now() - 172800000).toISOString().split('T')[0],
-            timestamp: new Date().toISOString()
-        }
-    ];
-
-    if (!localStorage.getItem('uangku_transactions')) {
-        localStorage.setItem('uangku_transactions', JSON.stringify(sampleTransactions));
-    }
-}
-
-addSampleData(); 
+ 
