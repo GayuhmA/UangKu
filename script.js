@@ -46,7 +46,6 @@ class UangKuApp {
 
         input.dataset.numericValue = numericValue;
         
-        // Format langsung saat mengetik
         if (numericValue > 0) {
             input.value = this.formatNumberWithSeparator(numericValue);
         } else {
@@ -62,7 +61,6 @@ class UangKuApp {
             return;
         }
 
-        // Tetap format dengan separator, bukan currency
         if (numericValue > 0) {
             input.value = this.formatNumberWithSeparator(numericValue);
         }
@@ -393,7 +391,6 @@ class UangKuApp {
             </div>
         `).join('');
 
-        // Add event listeners for edit and delete
         container.querySelectorAll('.edit-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const id = btn.closest('.all-transaction-item').getAttribute('data-id');
