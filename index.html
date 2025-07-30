@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UangKu</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-coins"></i>
+                <h1>UangKu</h1>
+            </div>
+            <div class="header-actions">
+                <button class="reset-btn-header" id="resetBtn" title="Reset Data">
+                    <i class="fas fa-trash"></i>
+                </button>
+                <button class="calendar-btn" id="calendarBtn">
+                    <i class="fas fa-calendar"></i>
+                </button>
+                <button class="add-btn" id="addTransactionBtn">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+        </header>
+
+        <main class="dashboard">
+            <section class="summary-section">
+                <div class="summary-card today">
+                    <div class="card-icon">
+                        <i class="fas fa-calendar-day"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3>Hari Ini</h3>
+                        <p class="amount" id="todayAmount">Rp 0</p>
+                    </div>
+                </div>
+
+                <div class="summary-card week">
+                    <div class="card-icon">
+                        <i class="fas fa-calendar-week"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3>Minggu Ini</h3>
+                        <p class="amount" id="weekAmount">Rp 0</p>
+                    </div>
+                </div>
+
+                <div class="summary-card month">
+                    <div class="card-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <div class="card-content">
+                        <h3>Bulan Ini</h3>
+                        <p class="amount" id="monthAmount">Rp 0</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="charts-section">
+                <h2>Analisis Pengeluaran</h2>
+                <div class="chart-container">
+                    <canvas id="expenseChart"></canvas>
+                </div>
+            </section>
+
+            <section class="transactions-section">
+                <div class="section-header">
+                    <h2>Transaksi Terbaru</h2>
+                    <button class="view-all-btn" id="viewAllBtn">Lihat Semua</button>
+                </div>
+                <div class="transactions-list" id="transactionsList">
+                </div>
+            </section>
+        </main>
+
+        <div class="modal" id="transactionModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Tambah Transaksi</h2>
+                    <button class="close-btn" id="closeModal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <form id="transactionForm">
+                    <div class="form-group">
+                        <label for="amount">Jumlah (Rp)</label>
+                        <input type="number" id="amount" name="amount" required placeholder="0">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="category">Kategori</label>
+                        <select id="category" name="category" required>
+                            <option value="">Pilih kategori</option>
+                            <option value="makanan">Makanan & Minuman</option>
+                            <option value="transport">Transportasi</option>
+                            <option value="belanja">Belanja</option>
+                            <option value="hiburan">Hiburan</option>
+                            <option value="kesehatan">Kesehatan</option>
+                            <option value="pendidikan">Pendidikan</option>
+                            <option value="lainnya">Lainnya</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="description">Deskripsi</label>
+                        <input type="text" id="description" name="description" required placeholder="Deskripsi transaksi">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="date">Tanggal</label>
+                        <input type="date" id="date" name="date" required>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" id="cancelBtn">Batal</button>
+                        <button type="submit" class="btn-primary">Simpan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Calendar Modal -->
+        <div class="modal" id="calendarModal">
+            <div class="modal-content calendar-modal">
+                <div class="modal-header">
+                    <h2>Kalender Pengeluaran</h2>
+                    <button class="close-btn" id="closeCalendarModal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="calendar-container">
+                    <div class="calendar-header">
+                        <button class="calendar-nav-btn" id="prevMonth">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <h3 id="currentMonthYear">Juli 2024</h3>
+                        <button class="calendar-nav-btn" id="nextMonth">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                    <div class="calendar-grid">
+                        <div class="calendar-weekdays">
+                            <div>Min</div>
+                            <div>Sen</div>
+                            <div>Sel</div>
+                            <div>Rab</div>
+                            <div>Kam</div>
+                            <div>Jum</div>
+                            <div>Sab</div>
+                        </div>
+                        <div class="calendar-days" id="calendarDays">
+                            <!-- Calendar days will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Daily Detail Modal -->
+        <div class="modal" id="dailyDetailModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="dailyDetailTitle">Detail Pengeluaran</h2>
+                    <button class="close-btn" id="closeDailyDetailModal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="daily-detail-content">
+                    <div class="daily-summary">
+                        <div class="daily-total">
+                            <h3>Total Pengeluaran</h3>
+                            <p class="amount" id="dailyTotalAmount">Rp 0</p>
+                        </div>
+                        <div class="daily-count">
+                            <h3>Jumlah Transaksi</h3>
+                            <p id="dailyTransactionCount">0 transaksi</p>
+                        </div>
+                    </div>
+                    <div class="daily-transactions" id="dailyTransactionsList">
+                        <!-- Daily transactions will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- All Transactions Modal -->
+        <div class="modal" id="allTransactionsModal">
+            <div class="modal-content all-transactions-modal">
+                <div class="modal-header">
+                    <h2>Semua Transaksi</h2>
+                    <button class="close-btn" id="closeAllTransactionsModal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="all-transactions-content">
+                    <div class="transactions-summary">
+                        <div class="total-transactions">
+                            <h3>Total Transaksi</h3>
+                            <p id="totalTransactionsCount">0 transaksi</p>
+                        </div>
+                        <div class="total-amount">
+                            <h3>Total Pengeluaran</h3>
+                            <p class="amount" id="totalAmount">Rp 0</p>
+                        </div>
+                    </div>
+                    <div class="transactions-filters">
+                        <select id="filterCategory" class="filter-select">
+                            <option value="">Semua Kategori</option>
+                            <option value="makanan">Makanan & Minuman</option>
+                            <option value="transport">Transportasi</option>
+                            <option value="belanja">Belanja</option>
+                            <option value="hiburan">Hiburan</option>
+                            <option value="kesehatan">Kesehatan</option>
+                            <option value="pendidikan">Pendidikan</option>
+                            <option value="lainnya">Lainnya</option>
+                        </select>
+                        <button class="reset-btn" id="resetFilterBtn">Reset Filter</button>
+                    </div>
+                    <div class="all-transactions-list" id="allTransactionsList">
+                        <!-- All transactions will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Transaction Modal -->
+        <div class="modal" id="editTransactionModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Edit Transaksi</h2>
+                    <button class="close-btn" id="closeEditModal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <form id="editTransactionForm">
+                    <div class="form-group">
+                        <label for="editAmount">Jumlah (Rp)</label>
+                        <input type="number" id="editAmount" name="amount" required placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="editCategory">Kategori</label>
+                        <select id="editCategory" name="category" required>
+                            <option value="">Pilih kategori</option>
+                            <option value="makanan">Makanan & Minuman</option>
+                            <option value="transport">Transportasi</option>
+                            <option value="belanja">Belanja</option>
+                            <option value="hiburan">Hiburan</option>
+                            <option value="kesehatan">Kesehatan</option>
+                            <option value="pendidikan">Pendidikan</option>
+                            <option value="lainnya">Lainnya</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="editDescription">Deskripsi</label>
+                        <input type="text" id="editDescription" name="description" required placeholder="Deskripsi transaksi">
+                    </div>
+                    <div class="form-group">
+                        <label for="editDate">Tanggal</label>
+                        <input type="date" id="editDate" name="date" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" id="cancelEditBtn">Batal</button>
+                        <button type="submit" class="btn-primary">Simpan Perubahan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Reset Confirmation Modal -->
+        <div class="modal" id="resetConfirmModal">
+            <div class="modal-content reset-modal">
+                <div class="modal-header">
+                    <h2>Reset Data</h2>
+                    <button class="close-btn" id="closeResetModal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="reset-content">
+                    <div class="reset-warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h3>Peringatan!</h3>
+                        <p>Anda yakin ingin menghapus semua data transaksi? Tindakan ini tidak dapat dibatalkan.</p>
+                    </div>
+                    <div class="reset-actions">
+                        <button class="btn-secondary" id="cancelResetBtn">Batal</button>
+                        <button class="btn-danger" id="confirmResetBtn">Hapus Semua Data</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+</body>
+</html> 
